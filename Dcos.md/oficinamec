@@ -1,0 +1,84 @@
+CREATE DATABASE oficina;
+USE oficina;
+
+-- Tabela Cliente
+CREATE TABLE cliente (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(20),
+    email VARCHAR(100)
+);
+
+-- Tabela Veiculo
+CREATE TABLE veiculo (
+    id_veiculo INT AUTO_INCREMENT PRIMARY KEY,
+    placa VARCHAR(10) NOT NULL,
+    modelo VARCHAR(50),
+    marca VARCHAR(50),
+    ano INT,
+    id_cliente INT,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+);
+
+-- Tabela Mecânico
+CREATE TABLE mecanico (
+    id_mecanico INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    especialidade VARCHAR(100)
+);
+
+-- Tabela Ordem de Serviço
+CREATE TABLE ordem_servico (
+    id_os INT AUTO_INCREMENT PRIMARY KEY,
+    data_abertura DATE,
+    data_fechamento DATE,
+    status VARCHAR(50),
+    id_veiculo INT,
+    id_mecanico INT,
+    FOREIGN KEY (id_veiculo) REFERENCES veiculo(id_veiculo),
+    FOREIGN KEY (id_mecanico) REFERENCES mecanico(id_mecanico)
+);
+
+-- Tabela Serviços
+CREATE TABLE servico (
+    id_servico INT AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(100),
+    valor DECIMAL(10,2)
+);
+
+-- Tabela Peças
+CREATE TABLE peca (
+    id_peca INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    preco DECIMAL(10,2),
+    estoque INT
+);
+
+-- Serviços realizados na OS
+CREATE TABLE item_servico (
+    id_item_servico INT AUTO_INCREMENT PRIMARY KEY,
+    id_os INT,
+    id_servico INT,
+    quantidade INT,
+    FOREIGN KEY (id_os) REFERENCES ordem_servico(id_os),
+    FOREIGN KEY (id_servico) REFERENCES servico(id_servico)
+);
+
+-- Peças utilizadas na OS
+CREATE TABLE item_peca (
+    id_item_peca INT AUTO_INCREMENT PRIMARY KEY,
+    id_os INT,
+    id_peca INT,
+    quantidade INT,
+    FOREIGN KEY (id_os) REFERENCES ordem_servico(id_os),
+    FOREIGN KEY (id_peca) REFERENCES peca(id_peca)
+);
+
+INSERT INTO cliente (nome, telefone, email)
+VALUES ('Carlos Silva', '119999999', 'carlos@email.com');
+
+INSERT INTO veiculo (placa, modelo, marca, ano, id_cliente)
+VALUES ('ABC1234', 'Civic', 'Honda', 2018, 1);
+
+INSERT INTO mecanico (nome, especialidade)
+VALUES ('João Mecânico', 'Motor');
